@@ -3,6 +3,14 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 from openai import OpenAI
 
+
+key = os.getenv("OPENAI_API_KEY")
+
+if key:
+    print("OPENAI_API_KEY prefix:", key[:6])
+else:
+    print("OPENAI_API_KEY is NOT set")
+    
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
