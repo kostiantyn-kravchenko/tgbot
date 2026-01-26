@@ -9,7 +9,7 @@ init_db()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 DATABASE_URL = os.getenv("DATABASE_URL")
-
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
 SYSTEM_PROMPT = "Відповідай коротко й по суті."
 MAX_TURNS = 10
@@ -84,7 +84,7 @@ def summarize(key):
     prompt.extend(list(st["turns"]))
 
     resp = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model=OPENAI_MODEL,
         messages=prompt,
     )
     st["summary"] = resp.choices[0].message.content.strip()
@@ -153,7 +153,7 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # 3) Побудувати контекст і зробити запит
         msgs = build_messages(key, text)
         resp = client.chat.completions.create(
-            model="gpt-4.1-mini",
+            model=OPENAI_MODEL,
             messages=msgs,
         )
         answer = resp.choices[0].message.content
