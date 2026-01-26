@@ -136,6 +136,12 @@ async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Привіт! Я чат-бот.\n\n" + HELP_TEXT
     )
 
+async def cmd_model(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        f"Поточна модель: {OPENAI_MODEL}"
+    )
+
+
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id, user_id = user_key(update)
     key = (chat_id, user_id)
@@ -187,5 +193,6 @@ app.add_handler(CommandHandler("memory_on", cmd_memory_on))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
 app.add_handler(CommandHandler("help", help_cmd))
 app.add_handler(CommandHandler("start", start_cmd))
+app.add_handler(CommandHandler("model", cmd_model))
 
 app.run_polling()
