@@ -8,6 +8,8 @@ from db import init_db, load_state, save_state, clear_state
 init_db()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 
 SYSTEM_PROMPT = "Відповідай коротко й по суті."
 MAX_TURNS = 10
