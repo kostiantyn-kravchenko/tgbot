@@ -4,6 +4,8 @@ import psycopg
 DATABASE_URL = (os.getenv("DATABASE_PRIVATE_URL")
  or os.getenv("DATABASE_URL"))
 if not DATABASE_URL:
+    print("ENV KEYS (db-related):", [k for k in os.environ.keys() if "DATABASE" in k or k.startswith("PG")])
+
     raise RuntimeError("DATABASE_URL is not set")
 
 def init_db():
