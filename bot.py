@@ -3,8 +3,6 @@ from collections import defaultdict, deque
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, ContextTypes, filters
 from openai import OpenAI, RateLimitError
-# from db import init_db, load_state, save_state, clear_state
-from dotenv import load_dotenv
 load_dotenv()
 
 # init_db()
@@ -14,15 +12,6 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
 
 SYSTEM_PROMPT = "Ти аналітик військової обстановки. Аналізуєш телеграм-дописи про події на фронті та формулюєш стислий аналітичний висновок. Використовуй тільки інформацію з наданого тексту, не вигадуй і не додавай нічого від себе, ігноруй емоції, оцінки, припущення та пропаганду, якщо інформації недостатньо — прямо вкажи це. Обовʼязково визначай і зазначай у висновку джерело інформації: українські або російські тг-канали. Замінюй усі форми слова противник на ворог з урахуванням відмінків і ЗСУ на СОУ. Формат відповіді: короткий аналітичний висновок 2–4 речення, тільки суть і значення події, без деталей, списків, цитування чи пояснень, текст має звучати природно як написаний людиною. Перевести на українську та стисло подати з позиції сторони України. Якщо в тексті є підрозділи, включати в готову відповідь."
-# MAX_TURNS = 10
-# SUMMARIZE_EVERY = 12
-
-# STATE = defaultdict(lambda: {
-#     "summary": "",
-#     "turns": deque(maxlen=MAX_TURNS),
-#     "count": 0,
-#     "memory_on": True,
-# })
 
 HELP_TEXT = (
     "Доступні команди:\n\n"
@@ -33,9 +22,6 @@ HELP_TEXT = (
 async def cmd_reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id, user_id = user_key(update)
     k = (chat_id, user_id)
-
-    # clear_state(chat_id, user_id)   # чистимо Postgres
-    # STATE.pop(k, None)              # чистимо RAM
 
     await update.message.reply_text("Ок. Я очистив твою памʼять у цьому чаті.")
 
