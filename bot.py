@@ -3,9 +3,9 @@ from collections import defaultdict, deque
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, ContextTypes, filters
 from openai import OpenAI, RateLimitError
-from db import init_db, load_state, save_state, clear_state
+# from db import init_db, load_state, save_state, clear_state
 
-init_db()
+# init_db()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -106,30 +106,30 @@ async def cmd_privacy(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(f"Що я пам'ятаю (summary):\n{summary}")
 
-async def cmd_memory_off(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id, user_id = user_key(update)
-    k = (chat_id, user_id)
+# async def cmd_memory_off(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     chat_id, user_id = user_key(update)
+#     k = (chat_id, user_id)
 
-    db_state = load_state(chat_id, user_id)
-    STATE[k]["summary"] = db_state["summary"]
-    STATE[k]["memory_on"] = False
-    STATE[k]["turns"].clear()
+#     db_state = load_state(chat_id, user_id)
+#     STATE[k]["summary"] = db_state["summary"]
+#     STATE[k]["memory_on"] = False
+#     STATE[k]["turns"].clear()
 
-    save_state(chat_id, user_id, summary=STATE[k]["summary"], memory_on=False)
+#     save_state(chat_id, user_id, summary=STATE[k]["summary"], memory_on=False)
 
-    await update.message.reply_text("Ок. Пам'ять вимкнена для цього чату.")
+#     await update.message.reply_text("Ок. Пам'ять вимкнена для цього чату.")
 
-async def cmd_memory_on(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id, user_id = user_key(update)
-    k = (chat_id, user_id)
+# async def cmd_memory_on(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     chat_id, user_id = user_key(update)
+#     k = (chat_id, user_id)
 
-    db_state = load_state(chat_id, user_id)
-    STATE[k]["summary"] = db_state["summary"]
-    STATE[k]["memory_on"] = True
+#     db_state = load_state(chat_id, user_id)
+#     STATE[k]["summary"] = db_state["summary"]
+#     STATE[k]["memory_on"] = True
 
-    save_state(chat_id, user_id, summary=STATE[k]["summary"], memory_on=True)
+#     save_state(chat_id, user_id, summary=STATE[k]["summary"], memory_on=True)
 
-    await update.message.reply_text("Ок. Пам'ять увімкнена для цього чату.")
+#     await update.message.reply_text("Ок. Пам'ять увімкнена для цього чату.")
 
 async def start_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -185,11 +185,11 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 app = ApplicationBuilder().token(os.getenv("TELEGRAM_BOT_TOKEN")).build()
-app.add_handler(CommandHandler("reset", cmd_reset))
-app.add_handler(CommandHandler("forget", cmd_reset))
-app.add_handler(CommandHandler("privacy", cmd_privacy))
-app.add_handler(CommandHandler("memory_off", cmd_memory_off))
-app.add_handler(CommandHandler("memory_on", cmd_memory_on))
+# app.add_handler(CommandHandler("reset", cmd_reset))
+# app.add_handler(CommandHandler("forget", cmd_reset))
+# app.add_handler(CommandHandler("privacy", cmd_privacy))
+# app.add_handler(CommandHandler("memory_off", cmd_memory_off))
+# app.add_handler(CommandHandler("memory_on", cmd_memory_on))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle))
 app.add_handler(CommandHandler("help", help_cmd))
 app.add_handler(CommandHandler("start", start_cmd))
