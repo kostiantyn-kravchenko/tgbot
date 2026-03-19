@@ -43,15 +43,8 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def user_key(update: Update):
     return (update.effective_chat.id, update.effective_user.id)
 
-def build_messages(key, new_text: str):
-    # st = STATE[key]
+def build_messages(new_text: str):
     msgs = [{"role": "system", "content": SYSTEM_PROMPT}]
-
-    # if st["memory_on"] and st["summary"]:
-    #     msgs.append({"role": "system", "content": f"Пам'ять (summary):\n{st['summary']}"})
-    # if st["memory_on"]:
-    #     msgs.extend(list(st["turns"]))
-
     msgs.append({"role": "user", "content": new_text})
     return msgs
 
