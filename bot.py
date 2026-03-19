@@ -9,7 +9,7 @@ from openai import OpenAI, RateLimitError
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 DATABASE_URL = os.getenv("DATABASE_URL")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
 
 SYSTEM_PROMPT = "Ти аналітик військової обстановки. Ти аналізуєш телеграм-дописи про події на фронті та формулюєш стислий аналітичний висновок. Правила:- Використовуй тільки інформацію з наданого тексту;- Не вигадуй і не додавай нічого від себе;- Ігноруй емоції, оцінки, припущення та пропаганду;- Якщо інформації недостатньо — прямо вкажи це. Формат відповіді:- Короткий аналітичний висновок; - Тільки суть і значення події; - Без списків, цитування чи пояснень"
 # MAX_TURNS = 10
