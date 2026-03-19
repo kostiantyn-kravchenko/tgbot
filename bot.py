@@ -139,45 +139,28 @@ async def cmd_model(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id, user_id = user_key(update)
-    key = (chat_id, user_id)
-
     text = update.message.text or ""
 
-    # # 1) Підтягнути summary/memory_on з БД
-    # db_state = load_state(chat_id, user_id)
-
-    # # 2) Синхронізувати RAM-стан для цього користувача
-    # STATE[key]["summary"] = db_state["summary"]
-    # STATE[key]["memory_on"] = db_state["memory_on"]
-
     try:
-        # 3) Побудувати контекст і зробити запит
-        msgs = build_messages(key, text)
+        msgs = build_messages(text)
         resp = client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=msgs,
         )
-        answer = resp.choices[0].message.content
+        answer = resp.choices[0].message.content or "Модель повернула порожню відповідь."
 
-        # # 4) Оновити RAM-історію (turns)
-        # memorize(key, "user", text)
-        # memorize(key, "assistant", answer)
-
-        # # 5) Якщо пора — стиснути в summary і зберегти в БД
-        # if should_summarize(key):
-        #     summarize(key)  # оновлює STATE[key]["summary"] і чистить turns
-        #     save_state(
-        #         chat_id,
-        #         user_id,
-        #         summary=STATE[key]["summary"],
-        #         memory_on=STATE[key]["memory_on"],
-        #     )
-
-        await update.message.reply_text(answer)
+        if len(answer) > 4000:
+            for i in range(0, len(answer), 4000):
+                await update.message.reply_text(answer[i:i+4000])
+        else:
+            await update.message.reply_text(answer)
 
     except RateLimitError:
         await update.message.reply_text("⚠️ Немає доступної квоти API. Перевір billing/ліміти.")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        await update.message.reply_text(f"Сталася помилка: {type(e).__name__}")
 
 
 app = ApplicationBuilder().token(os.getenv("TELEGRAM_BOT_TOKEN")).build()
