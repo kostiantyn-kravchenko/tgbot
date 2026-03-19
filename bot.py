@@ -15,12 +15,12 @@ SYSTEM_PROMPT = "Ти аналітик військової обстановки
 # MAX_TURNS = 10
 # SUMMARIZE_EVERY = 12
 
-STATE = defaultdict(lambda: {
-    "summary": "",
-    "turns": deque(maxlen=MAX_TURNS),
-    "count": 0,
-    "memory_on": True,
-})
+# STATE = defaultdict(lambda: {
+#     "summary": "",
+#     "turns": deque(maxlen=MAX_TURNS),
+#     "count": 0,
+#     "memory_on": True,
+# })
 
 HELP_TEXT = (
     "Доступні команди:\n\n"
@@ -32,8 +32,8 @@ async def cmd_reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id, user_id = user_key(update)
     k = (chat_id, user_id)
 
-    clear_state(chat_id, user_id)   # чистимо Postgres
-    STATE.pop(k, None)              # чистимо RAM
+    # clear_state(chat_id, user_id)   # чистимо Postgres
+    # STATE.pop(k, None)              # чистимо RAM
 
     await update.message.reply_text("Ок. Я очистив твою памʼять у цьому чаті.")
 
@@ -44,7 +44,7 @@ def user_key(update: Update):
     return (update.effective_chat.id, update.effective_user.id)
 
 def build_messages(key, new_text: str):
-    st = STATE[key]
+    # st = STATE[key]
     msgs = [{"role": "system", "content": SYSTEM_PROMPT}]
 
     if st["memory_on"] and st["summary"]:
