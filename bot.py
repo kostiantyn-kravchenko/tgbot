@@ -3,7 +3,6 @@ from collections import defaultdict, deque
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, ContextTypes, filters
 from openai import OpenAI, RateLimitError
-load_dotenv()
 
 # init_db()
 
