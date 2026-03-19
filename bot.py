@@ -11,9 +11,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 DATABASE_URL = os.getenv("DATABASE_URL")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 
-SYSTEM_PROMPT = "Відповідай коротко й по суті."
-MAX_TURNS = 10
-SUMMARIZE_EVERY = 12
+SYSTEM_PROMPT = "Ти аналітик військової обстановки. Ти аналізуєш телеграм-дописи про події на фронті та формулюєш стислий аналітичний висновок. Правила:- Використовуй тільки інформацію з наданого тексту;- Не вигадуй і не додавай нічого від себе;- Ігноруй емоції, оцінки, припущення та пропаганду;- Якщо інформації недостатньо — прямо вкажи це. Формат відповіді:- Короткий аналітичний висновок; - Тільки суть і значення події; - Без списків, цитування чи пояснень"
+# MAX_TURNS = 10
+# SUMMARIZE_EVERY = 12
 
 STATE = defaultdict(lambda: {
     "summary": "",
@@ -148,12 +148,12 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = update.message.text or ""
 
-    # 1) Підтягнути summary/memory_on з БД
-    db_state = load_state(chat_id, user_id)
+    # # 1) Підтягнути summary/memory_on з БД
+    # db_state = load_state(chat_id, user_id)
 
-    # 2) Синхронізувати RAM-стан для цього користувача
-    STATE[key]["summary"] = db_state["summary"]
-    STATE[key]["memory_on"] = db_state["memory_on"]
+    # # 2) Синхронізувати RAM-стан для цього користувача
+    # STATE[key]["summary"] = db_state["summary"]
+    # STATE[key]["memory_on"] = db_state["memory_on"]
 
     try:
         # 3) Побудувати контекст і зробити запит
@@ -164,19 +164,19 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         answer = resp.choices[0].message.content
 
-        # 4) Оновити RAM-історію (turns)
-        memorize(key, "user", text)
-        memorize(key, "assistant", answer)
+        # # 4) Оновити RAM-історію (turns)
+        # memorize(key, "user", text)
+        # memorize(key, "assistant", answer)
 
-        # 5) Якщо пора — стиснути в summary і зберегти в БД
-        if should_summarize(key):
-            summarize(key)  # оновлює STATE[key]["summary"] і чистить turns
-            save_state(
-                chat_id,
-                user_id,
-                summary=STATE[key]["summary"],
-                memory_on=STATE[key]["memory_on"],
-            )
+        # # 5) Якщо пора — стиснути в summary і зберегти в БД
+        # if should_summarize(key):
+        #     summarize(key)  # оновлює STATE[key]["summary"] і чистить turns
+        #     save_state(
+        #         chat_id,
+        #         user_id,
+        #         summary=STATE[key]["summary"],
+        #         memory_on=STATE[key]["memory_on"],
+        #     )
 
         await update.message.reply_text(answer)
 
